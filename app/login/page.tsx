@@ -1,13 +1,42 @@
 /* eslint-disable react/no-unescaped-entities */
+'use client'
+
 import Link from "next/link";
 import React from "react";
+import { FormEvent } from "react";
+import { useRouter } from "next/navigation";
+import clientPromise from "../lib/db";
 
-const page = () => {
+export default function Page() {
+    const router = useRouter();
+
+    /* TODO: add authentication */
+    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
+
+        const formData = new FormData(event.currentTarget);
+        const email = formData.get("email");
+        const password = formData.get("password");
+
+        /* const response = await fetch("@/app/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        }); */
+        const response = {ok: true};
+
+        if (response.ok) {
+            router.push("/"); //push to user's dashboard
+        } else {
+            // Handle errors
+        }
+    }
+
     return (
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content flex-col lg:flex-col">
                 <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-                    <form className="card-body">
+                    <form className="card-body" onSubmit={handleSubmit}>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -15,6 +44,7 @@ const page = () => {
                             <input
                                 type="email"
                                 placeholder="email"
+                                name="email"
                                 className="input input-bordered"
                                 required
                             />
@@ -26,6 +56,7 @@ const page = () => {
                             <input
                                 type="password"
                                 placeholder="password"
+                                name="password"
                                 className="input input-bordered"
                                 required
                             />
@@ -54,5 +85,3 @@ const page = () => {
         </div>
     );
 };
-
-export default page;

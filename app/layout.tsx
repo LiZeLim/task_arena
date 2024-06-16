@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { Inter, Radio_Canada } from "next/font/google";
-import "./globals.css";
-import { NavBar } from "./components/navbar";
-import { Footer } from "./components/footer";
+import "@/app/globals.css";
+import { NavBar } from "@/app/components/NavBar";
+import { Footer } from "@/app/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 const radio_canada = Radio_Canada({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "Repeat Gym",
-    description: "Nothing for now",
+    description: "Simplified gym tracking application",
 };
 
 export default function RootLayout({
