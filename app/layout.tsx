@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter, Radio_Canada } from "next/font/google";
 import "@/app/globals.css";
-import { NavBar } from "@/app/components/NavBar";
-import { Footer } from "@/app/components/Footer";
+import { NavBar } from "@/app/components/navbar";
+import { Footer } from "@/app/components/footer";
 
 const inter = Inter({ subsets: ["latin"] });
 const radio_canada = Radio_Canada({ subsets: ["latin"] });
