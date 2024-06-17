@@ -5,7 +5,6 @@ import Link from "next/link";
 import React from "react";
 import { FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import clientPromise from "../lib/db";
 
 export default function Page() {
     const router = useRouter();
