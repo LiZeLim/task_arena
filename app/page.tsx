@@ -1,5 +1,4 @@
-import Image from "next/image";
-import { Hero } from "./home/hero";
+import { Hero } from "@/app/home/hero";
 
 export default function Home() {
     return (
