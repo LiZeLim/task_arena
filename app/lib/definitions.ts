@@ -2,7 +2,7 @@ export type User = {
     user_id: string,
     name: string,
     email: string,
-    pass: string;
+    password: string;
 }
 
 export type Workout = {

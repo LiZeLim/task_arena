@@ -3,32 +3,44 @@
 
 import Link from "next/link";
 import React from "react";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { QueryResult, sql } from "@vercel/postgres";
+import { NextResponse } from "next/server";
+import { fetchPassword } from "../api/auth/route";
 
 export default function Page() {
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     /* TODO: add authentication */
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const email = formData.get("email");
-        const password = formData.get("password");
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
 
-        /* const response = await fetch("@/app/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        }); */
-        const response = {ok: true};
+        if (typeof email !== "string" || typeof password !== "string") {
+            setErrorMessage("Invalid email or password");
+            return;
+        }
 
-        if (response.ok) {
+        //console.log(email);
+        const pass = await fetchPassword(email);
+        
+        if (pass.length === 0) {
+            setErrorMessage("User not found");
+            return;
+        }
+
+        if (password === pass) {
+            console.log("Login successful");
             router.push("/"); //push to user's dashboard
         } else {
-            // Handle errors
+            setErrorMessage("Invalid email or password");
         }
+        
     }
 
     return (
