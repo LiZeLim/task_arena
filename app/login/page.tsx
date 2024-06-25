@@ -7,7 +7,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QueryResult, sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
-import { fetchPassword } from "@/app/api/auth/route";
+import { fetchPassword } from "@/app/api/backend/db";
 
 export default function Page() {
     const router = useRouter();
