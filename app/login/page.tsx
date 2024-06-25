@@ -7,7 +7,7 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { QueryResult, sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
-import { fetchPassword } from "@/app/api/backend/db";
+import { fetchPassword, fetchUserId, fetchUserName } from "@/app/api/backend/db";
 
 export default function Page() {
     const router = useRouter();
@@ -35,9 +35,11 @@ export default function Page() {
         }
 
         if (password === pass) {
-            console.log("Login successful");
-            router.push("/"); //push to user's dashboard
+            const id = await fetchUserId(email);
+            console.log("Login successful:", id, email);
+            router.push(`/${id}/dashboard`); //push to user's dashboard
         } else {
+            console.log("Unsuccessful login");
             setErrorMessage("Invalid email or password");
         }
         

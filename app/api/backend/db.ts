@@ -3,16 +3,46 @@
 import { sql } from "@vercel/postgres";
 import { User } from "@/app/lib/definitions";
 
+async function fetchUserByEmail(email: string) {
+    try {
+        const db_users = await sql<User>`SELECT * FROM users WHERE email=${email}`;
+        return db_users.rows;
+    } catch (error) {
+        console.log("Database Error:", error);
+        throw new Error('Failed to fetch users');
+    }
+}
+
 export async function fetchPassword(
     email: string
 ) {
     try {
-        const db_pass = await sql<User>`SELECT password FROM users WHERE email=${email}`;
-        const pass = db_pass.rows;
-
-        return pass[0].password;
+        const password = await fetchUserByEmail(email);
+        return password[0].password;
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch passwords');
+    }
+}
+
+export async function fetchUserId(
+    email: string
+) {
+    try {
+        const id = await fetchUserByEmail(email);
+        return id[0].userid;
+    } catch (error) {
+        console.error("Database Error:", error);
+        throw new Error("Failed to fetch userId");
+    }
+}
+
+export async function fetchUserName(email: string) {
+    try {
+        const name = await fetchUserByEmail(email);
+        return name[0].name;
+    } catch (error) {
+        console.error("Database Error:", error);
+        throw new Error("Failed to fetch name");
     }
 }

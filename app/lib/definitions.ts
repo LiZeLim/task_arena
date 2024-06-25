@@ -1,11 +1,11 @@
 export type User = {
-    user_id: string,
+    userid: string,
     name: string,
     email: string,
     password: string;
 }
 
 export type Workout = {
-    workout_id: string,
+    workoutid: string,
     date: string,
 }
