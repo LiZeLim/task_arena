@@ -1,6 +1,6 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
-import { users, workouts } from "@/app/lib/placeholder-data"
+import { users } from "@/app/lib/placeholder-data"
 import bcrypt from 'bcrypt'
 
 export async function GET() {
