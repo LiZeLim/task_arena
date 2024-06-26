@@ -18,7 +18,7 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" data-theme="">
+        <html lang="en" data-theme="light">
             <body className={radio_canada.className}>
                 <NavBar />
                 {children}

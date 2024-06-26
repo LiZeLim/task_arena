@@ -37,7 +37,7 @@ export default function Page() {
         if (password === pass) {
             const id = await fetchUserId(email);
             console.log("Login successful:", id, email);
-            router.push(`/${id}/dashboard`); //push to user's dashboard
+            router.push(`/dashboard?id=${id}`); //push to user's dashboard
         } else {
             console.log("Unsuccessful login");
             setErrorMessage("Invalid email or password");

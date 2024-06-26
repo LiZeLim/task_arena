@@ -1,11 +1,17 @@
 export type User = {
-    userid: string,
+    user_id: string,
     name: string,
     email: string,
     password: string;
 }
 
 export type Workout = {
-    workoutid: string,
+    workout_id: string,
     date: string,
+    target: string; //chest, back, legs, arms
+};
+
+export type Exercise = {
+    exercise_id: string,
+    name: string;
 }
