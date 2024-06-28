@@ -29,15 +29,15 @@ export default function Page() {
         //console.log(email);
         const pass = await fetchPassword(email);
         
-        if (pass.length === 0) {
-            setErrorMessage("User not found");
+        if (pass.length === 0 || pass == "-1") {
+            setErrorMessage("Invalid Email or Password");
             return;
         }
 
         if (password === pass) {
             const id = await fetchUserId(email);
             console.log("Login successful:", id, email);
-            router.push(`/dashboard?id=${id}`); //push to user's dashboard
+            router.push(`/${id}/dashboard`); //push to user's dashboard
         } else {
             console.log("Unsuccessful login");
             setErrorMessage("Invalid email or password");
@@ -50,6 +50,7 @@ export default function Page() {
             <div className="hero-content flex-col lg:flex-col">
                 <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
                     <form className="card-body" onSubmit={handleSubmit}>
+                        <h1>{errorMessage}</h1>
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>

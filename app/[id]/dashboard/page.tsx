@@ -2,12 +2,22 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { ActivityCalendar } from "@/app/components/activityCalendar";
-import { Name } from "@/app/components/name";
+//import { Name } from "@/app/components/name";
 import { Loading } from "@/app/components/loading"
 import { WorkoutsTable } from "@/app/components/workoutsTable";
 import { UserStats } from "@/app/components/userStats";
+import { fetchNameById, fetchUserById } from "@/app/api/backend/db";
 
-export default function Dashboard() {
+async function getUser(id: string) {
+    const user = await fetchUserById(id);
+    return user[0];
+}
+
+export default async function Dashboard({ params }: { params: { id: string } }) {
+    const user = await getUser(params.id);
+    const name = user.name;
+    console.log(user.name);
+
     return (
         <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
             <div className="p-4 mx-auto w-full grow md:max-w-[800px] md:p-6 lg:max-w-screen-xl">
@@ -17,9 +27,10 @@ export default function Dashboard() {
                         <div className="card flex-col w-full px-4 py-6 bg-base-100">
                             <div>
                                 <h1 className="card-title">
-                                    <Suspense fallback={<Loading />}>
+                                    {/* <Suspense fallback={<p>hi</p>}>
                                         <Name />
-                                    </Suspense>
+                                    </Suspense> */}
+                                    {name}
                                 </h1>
                             </div>
                             <div className="divider"></div>
@@ -47,4 +58,4 @@ export default function Dashboard() {
             </div>
         </section>
     );
-}
+};
