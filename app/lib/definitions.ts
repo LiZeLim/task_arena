@@ -3,7 +3,7 @@ export type User = {
     name: string,
     email: string,
     password: string;
-}
+};
 
 export type Workout = {
     workout_id: string,
@@ -14,4 +14,10 @@ export type Workout = {
 export type Exercise = {
     exercise_id: string,
     name: string;
-}
+};
+
+export type WorkoutLog = {
+    workout_log_id: string,
+    user_id: string,
+    workout_id: string
+};

@@ -86,3 +86,12 @@ export async function fetchNameById(id: string) {
         throw new Error("Failed to fetch name");
     }
 }
+
+export async function fetchWorkoutsById(id: string) {
+    try {
+        const workouts = await sql`SELECT * FROM workout_logs NATURAL JOIN workouts NATURAL JOIN users U WHERE U.user_id=${id}`;
+        return workouts.rows;
+    } catch (error) {
+        return [];
+    }
+}

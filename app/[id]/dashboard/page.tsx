@@ -6,17 +6,57 @@ import { ActivityCalendar } from "@/app/components/activityCalendar";
 import { Loading } from "@/app/components/loading"
 import { WorkoutsTable } from "@/app/components/workoutsTable";
 import { UserStats } from "@/app/components/userStats";
-import { fetchNameById, fetchUserById } from "@/app/api/backend/db";
+import { fetchUserById, fetchWorkoutsById } from "@/app/api/backend/db";
+import { QueryResult, QueryResultRow } from "@vercel/postgres";
 
 async function getUser(id: string) {
     const user = await fetchUserById(id);
     return user[0];
 }
 
+async function getWorkouts(id: string) {
+    const workouts = await fetchWorkoutsById(id);
+    //console.log(workouts);
+    return workouts;
+}
+
+function getIndividualWorkouts(workouts: QueryResultRow[]) {
+    let ls_push: QueryResultRow[] = [];
+    let ls_pull: QueryResultRow[] = [];
+    let ls_legs: QueryResultRow[] = [];
+
+    for (let row of workouts) {
+        //console.log(row.target_muscles);
+        const muscle = row.target_muscles as string;
+        if (muscle.toLowerCase() == "push") {
+            ls_push.push(row);
+        } else if (muscle.toLowerCase() == "pull") {
+            ls_pull.push(row);
+        } else if (muscle.toLowerCase() == "legs") {
+            ls_legs.push(row);
+        }
+    }
+    return [ls_push, ls_pull, ls_legs];
+}
+
 export default async function Dashboard({ params }: { params: { id: string } }) {
     const user = await getUser(params.id);
     const name = user.name;
-    console.log(user.name);
+    console.log("Username:", user.name);
+
+    const workouts = await getWorkouts(params.id);
+    //console.log("workouts", workouts.length);
+
+    const individualWorkouts = getIndividualWorkouts(workouts);
+    const totalPush: number = individualWorkouts[0].length;
+    const totalPull: number = individualWorkouts[1].length;
+    const totalLegs: number = individualWorkouts[2].length;
+
+    const stats = {
+        numPush: totalPush,
+        numPull: totalPull,
+        numLegs: totalLegs
+    };
 
     return (
         <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
@@ -36,7 +76,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                             <div className="divider"></div>
                             <ActivityCalendar />
                             <div className="divider"></div>
-                            <UserStats />
+                            <UserStats params={stats}/>
                         </div>
                     </div>
                     <div className="divider lg:divider-horizontal"></div>

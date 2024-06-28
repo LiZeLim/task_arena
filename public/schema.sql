@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS workouts (
     workout_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
     workout_date DATE NOT NULL,
-    target_muscles VARCHAR(255) NOT NULL
+    target_muscles VARCHAR(255) NOT NULL /* Only push, pull or legs */
 );
 
 CREATE TABLE IF NOT EXISTS exercises (
@@ -45,7 +45,6 @@ INSERT INTO workouts (workout_id, workout_date, target_muscles) VALUES
 
 INSERT INTO workout_exercises (workout_exercises_id, workout_id, exercise_id) VALUES
 ('c5e2d2e1-7081-4b8e-b0e4-7f3a2dbccf57', 'ae7c6f0e-b94c-4b09-8b2c-1d7fd29a9c53', '1f9f1e38-8076-4c84-9c2f-8f732d61c11e'),
-('d5f4e2a3-7cb4-4d3d-923d-3b7c2cbbe7e4', 'ae7c6f0e-b94c-4b09-8b2c-1d7fd29a9c53', '2e5d7c69-fcfc-47ae-9e2c-c57d0b34ec41');
 
 INSERT INTO workout_logs (workout_log_id, user_id, workout_id) VALUES
 ('e6f7e3d5-9cb6-4f44-9365-4f1b2d7e9a67', 'b6f8b48e-2dfc-4f54-bb3e-54f43eaf1d73', 'ae7c6f0e-b94c-4b09-8b2c-1d7fd29a9c53');
