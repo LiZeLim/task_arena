@@ -1,13 +1,12 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { CSSProperties } from "react";
 import { ActivityCalendar } from "@/app/components/activityCalendar";
-//import { Name } from "@/app/components/name";
-import { Loading } from "@/app/components/loading"
 import { WorkoutsTable } from "@/app/components/workoutsTable";
 import { UserStats } from "@/app/components/userStats";
-import { fetchUserById, fetchWorkoutsById } from "@/app/api/backend/db";
+import { fetchUserById, fetchWorkoutsById, fetchWorkoutsByDate, fetchUserWeeklyGoal } from "@/app/api/backend/db";
 import { QueryResult, QueryResultRow } from "@vercel/postgres";
+import { Workout } from '@/app/lib/definitions';
 
 async function getUser(id: string) {
     const user = await fetchUserById(id);
@@ -39,10 +38,40 @@ function getIndividualWorkouts(workouts: QueryResultRow[]) {
     return [ls_push, ls_pull, ls_legs];
 }
 
+function getWeekDates() {
+    const today = new Date();
+    let week: string[] = [];
+
+    for (let i = 1; i < 8; i++) {
+        let monday = today.getDate() - today.getDay() + i;
+        //console.log(monday);
+        let day = new Date(today.setDate(monday)).toISOString().slice(0, 10);
+        //console.log(day);
+        week.push(day);
+    }
+
+    return week;
+}
+
+async function getCurrentWeekIds(currentWeekDates: string[]) {
+    let currentWeekWorkoutsIds: Workout[] = [];
+
+    for (let date of currentWeekDates) {
+        let dateWorkout = await fetchWorkoutsByDate(date);
+
+        for (let work of dateWorkout) {
+            currentWeekWorkoutsIds.push(work);
+        }
+    }
+
+    return currentWeekWorkoutsIds;
+}
+
 export default async function Dashboard({ params }: { params: { id: string } }) {
     const user = await getUser(params.id);
     const name = user.name;
     console.log("Username:", user.name);
+    //console.log(user);
 
     const workouts = await getWorkouts(params.id);
     //console.log("workouts", workouts.length);
@@ -57,6 +86,13 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
         numPull: totalPull,
         numLegs: totalLegs
     };
+
+    let currentWeekDates: string[] = getWeekDates();
+    let currentWeekWorkoutsIds: Workout[] = await getCurrentWeekIds(currentWeekDates);
+    //console.log(currentWeekWorkoutsIds);
+
+    const workoutGoalRatio = Math.round((currentWeekWorkoutsIds.length / user.weekly_goal) * 100);
+    //console.log(workoutGoalRatio);
 
     return (
         <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
@@ -76,12 +112,24 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                             <div className="divider"></div>
                             <ActivityCalendar />
                             <div className="divider"></div>
-                            <UserStats params={stats}/>
+                            <UserStats params={stats} />
                         </div>
                     </div>
                     <div className="divider lg:divider-horizontal"></div>
                     <div className="flex flex-col">
                         {/* User stats section */}
+                        <div className="card card-compact bg-base-100">
+                            <div className="card-body">
+                                <div
+                                    className="radial-progress"
+                                    style={{ "--value": workoutGoalRatio } as CSSProperties}
+                                    role="progressbar"
+                                >
+                                    {workoutGoalRatio}%
+                                </div>
+                            </div>
+                        </div>
+                        <div className="divider"></div>
                         <div className="card card-compact bg-base-100">
                             <div className="card-body">
                                 <WorkoutsTable />

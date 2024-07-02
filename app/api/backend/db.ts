@@ -1,7 +1,7 @@
 'use server'
 
 import { sql } from "@vercel/postgres";
-import { User } from "@/app/lib/definitions";
+import { User, Workout } from "@/app/lib/definitions";
 
 async function fetchUserByEmail(email: string) {
     try {
@@ -16,7 +16,10 @@ async function fetchUserByEmail(email: string) {
 
 export async function fetchUserById(id: string) {
     try {
-        const db_users = await sql<User>`SELECT * FROM users WHERE user_id=${id}`;
+        const db_users = await sql<
+            User
+        >`SELECT user_id, name, email, password, weekly_goal FROM users WHERE user_id=${id}`;
+        //console.log(db_users);
         return db_users.rows;
     } catch (error) {
         console.log("Database Error:", error);
@@ -25,10 +28,7 @@ export async function fetchUserById(id: string) {
     }
 }
 
-
-export async function fetchPassword(
-    email: string
-) {
+export async function fetchPassword(email: string) {
     try {
         const password = await fetchUserByEmail(email);
         if (password.length == 0) {
@@ -43,9 +43,7 @@ export async function fetchPassword(
     }
 }
 
-export async function fetchUserId(
-    email: string
-) {
+export async function fetchUserId(email: string) {
     try {
         const id = await fetchUserByEmail(email);
         if (id.length == 0) {
@@ -91,6 +89,24 @@ export async function fetchWorkoutsById(id: string) {
     try {
         const workouts = await sql`SELECT * FROM workout_logs NATURAL JOIN workouts NATURAL JOIN users U WHERE U.user_id=${id}`;
         return workouts.rows;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function fetchWorkoutsByDate(date: string) {
+    try {
+        const workouts = await sql<Workout>`SELECT workout_id FROM workouts WHERE to_char(workout_date, 'YYYY-MM-DD')=${date};`;
+        return workouts.rows;
+    } catch (error) {
+        return [];
+    }
+}
+
+export async function fetchUserWeeklyGoal(id: string) {
+    try {
+        const goal = await sql`SELECT weekly_goal FROM users WHERE user_id=${id}`;
+        return goal.rows;
     } catch (error) {
         return [];
     }

@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTS users (
     user_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY, 
     name VARCHAR(255) NOT NULL, 
     email TEXT NOT NULL UNIQUE, 
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    weekly_goal INTEGER
 );
 
 CREATE TABLE IF NOT EXISTS workouts (
