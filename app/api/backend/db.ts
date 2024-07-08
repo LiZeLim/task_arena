@@ -2,6 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 import { User, Workout } from "@/app/lib/definitions";
+import { v4 as uuidv4 } from 'uuid';
 
 async function fetchUserByEmail(email: string) {
     try {
@@ -90,6 +91,7 @@ export async function fetchWorkoutsById(id: string) {
         const workouts = await sql`SELECT * FROM workout_logs NATURAL JOIN workouts NATURAL JOIN users U WHERE U.user_id=${id}`;
         return workouts.rows;
     } catch (error) {
+        console.log("fetch workouts by id error");
         return [];
     }
 }
@@ -109,5 +111,25 @@ export async function fetchUserWeeklyGoal(id: string) {
         return goal.rows;
     } catch (error) {
         return [];
+    }
+}
+
+//TODO view table of workouts, etc\
+
+export async function addWorkout(id: string, target_muscles: string) {
+    console.log(id, target_muscles);
+    try {
+        const workoutId = uuidv4();
+        const workoutLogId = uuidv4();
+        const currentDate = new Date().toISOString().split("T")[0];
+        console.log(workoutId, workoutLogId, currentDate);
+        const insertedWorkout = await sql`INSERT INTO workouts (workout_id, workout_date, target_muscles) VALUES (${workoutId}, ${currentDate} ,${target_muscles})`;
+        const insertedWorkoutLog = await sql`INSERT INTO workout_logs (workout_log_id, user_id, workout_id) VALUES (${workoutLogId}, ${id}, ${workoutId})`;
+        console.log("added workout");
+        console.log(insertedWorkout);
+        console.log(insertedWorkoutLog);
+    } catch (error) {
+        console.log("error inserting workout");
+        return;
     }
 }

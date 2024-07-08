@@ -1,6 +1,8 @@
 import React from "react";
 
 export const UserStats = ({ params } : { params: {numPush: number, numPull: number, numLegs: number}}) => {
+    console.log(params.numPush, params.numPull, params.numLegs);
+
     return (
         <div>
             <div className="stats stats-vertical">

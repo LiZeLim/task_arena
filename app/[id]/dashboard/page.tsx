@@ -1,12 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, FormEvent } from "react";
 import { ActivityCalendar } from "@/app/components/activityCalendar";
 import { WorkoutsTable } from "@/app/components/workoutsTable";
 import { UserStats } from "@/app/components/userStats";
 import { fetchUserById, fetchWorkoutsById, fetchWorkoutsByDate, fetchUserWeeklyGoal } from "@/app/api/backend/db";
 import { QueryResult, QueryResultRow } from "@vercel/postgres";
 import { Workout } from '@/app/lib/definitions';
+import { AddWorkout } from "@/app/components/addWorkout";
 
 async function getUser(id: string) {
     const user = await fetchUserById(id);
@@ -70,7 +71,7 @@ async function getCurrentWeekIds(currentWeekDates: string[]) {
 export default async function Dashboard({ params }: { params: { id: string } }) {
     const user = await getUser(params.id);
     const name = user.name;
-    console.log("Username:", user.name);
+    console.log("Username:", user.name, user.weekly_goal);
     //console.log(user);
 
     const workouts = await getWorkouts(params.id);
@@ -88,6 +89,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
     };
 
     let currentWeekDates: string[] = getWeekDates();
+    //console.log(currentWeekDates);
     let currentWeekWorkoutsIds: Workout[] = await getCurrentWeekIds(currentWeekDates);
     //console.log(currentWeekWorkoutsIds);
 
@@ -127,6 +129,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                                 >
                                     {workoutGoalRatio}%
                                 </div>
+                                <div>Monday: {currentWeekDates[0]}</div>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -135,12 +138,10 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                                 <WorkoutsTable />
                             </div>
                         </div>
-                        <div className="divider"></div>
-                        <div className="card card-compact bg-base-100">
-                            <div className="card-body">
-                                <WorkoutsTable />
-                            </div>
-                        </div>
+                    </div>
+                    <div className="divider lg:divider-horizontal"></div>
+                    <div>
+                        <AddWorkout params={params}/>
                     </div>
                 </div>
             </div>
