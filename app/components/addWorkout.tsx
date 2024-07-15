@@ -2,6 +2,7 @@
 
 import React, { FormEvent } from 'react'
 import { addWorkout } from '@/app/api/backend/db';
+import { useRouter } from "next/navigation";
 
 export const AddWorkout = ({ params }: { params : {id: string}}) => {
     async function handleAddWorkoutSubmit(event: FormEvent<HTMLFormElement>) {
@@ -13,6 +14,12 @@ export const AddWorkout = ({ params }: { params : {id: string}}) => {
 
         await addWorkout(params.id, selection);
     }
+
+    const router = useRouter();
+    const handleRefresh = () => {
+        // This will refresh the current page
+        router.refresh();
+    };
 
   return (
       <div className="card card-compact bg-base-100">
@@ -54,7 +61,7 @@ export const AddWorkout = ({ params }: { params : {id: string}}) => {
                       </label>
                   </div>
                   <div className="form-control mt-6">
-                      <button className="btn btn-primary">Add</button>
+                      <button onClick={handleRefresh} className="btn btn-primary">Add</button>
                   </div>
               </form>
           </div>
