@@ -38,6 +38,7 @@ const config: Config = {
                     error: "#e11d48",
                 },
             },
+            "pastel", "light"
         ],
     },
     plugins: [require("daisyui")],
