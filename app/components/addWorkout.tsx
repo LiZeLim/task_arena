@@ -17,7 +17,6 @@ export const AddWorkout = ({ params }: { params : {id: string}}) => {
 
     const router = useRouter();
     const handleRefresh = () => {
-        // This will refresh the current page
         router.refresh();
     };
 
