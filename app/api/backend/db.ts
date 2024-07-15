@@ -94,7 +94,7 @@ export async function fetchNameById(id: string) {
 export async function fetchWorkoutsById(id: string) {
     noStore();
     try {
-        const workouts = await sql`SELECT * FROM workout_logs WL JOIN workouts W ON WL.workout_id=W.workout_id JOIN users U ON WL.user_id=U.user_id WHERE U.user_id=${id};`;
+        const workouts = await sql`SELECT * FROM workout_logs WL JOIN workouts W ON WL.workout_id=W.workout_id JOIN users U ON WL.user_id=U.user_id WHERE U.user_id=${id} ORDER BY W.workout_date DESC;`;
         return workouts.rows;
     } catch (error) {
         console.log("fetch workouts by id error");

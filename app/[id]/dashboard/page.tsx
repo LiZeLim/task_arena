@@ -9,8 +9,6 @@ import { QueryResult, QueryResultRow } from "@vercel/postgres";
 import { Workout } from '@/app/lib/definitions';
 import { AddWorkout } from "@/app/components/addWorkout";
 
-import { sql } from "@vercel/postgres";
-
 async function getUser(id: string) {
     const user = await fetchUserById(id);
     return user[0];
@@ -68,6 +66,10 @@ async function getCurrentWeekIds(currentWeekDates: string[]) {
     }
 
     return currentWeekWorkoutsIds;
+}
+
+interface UserWorkoutList {
+    workouts: QueryResultRow[];
 }
 
 export default async function Dashboard({ params }: { params: { id: string } }) {
@@ -145,7 +147,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                         <div className="divider"></div>
                         <div className="card card-compact bg-base-100">
                             <div className="card-body">
-                                <WorkoutsTable />
+                                <WorkoutsTable workouts={workouts}/>
                             </div>
                         </div>
                     </div>

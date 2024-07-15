@@ -1,45 +1,40 @@
+import { QueryResultRow } from '@vercel/postgres';
 import React from 'react'
 
-export const WorkoutsTable = () => {
-  return (
-      <div>
-          <h1 className='card-title'>Recent Workouts</h1>
-          <div className="overflow-x-auto">
-              <table className="table">
-                  {/* head */}
-                  <thead>
-                      <tr>
-                          <th></th>
-                          <th>Name</th>
-                          <th>Job</th>
-                          <th>Favorite Color</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      {/* row 1 */}
-                      <tr>
-                          <th>1</th>
-                          <td>Cy Ganderton</td>
-                          <td>Quality Control Specialist</td>
-                          <td>Blue</td>
-                      </tr>
-                      {/* row 2 */}
-                      <tr>
-                          <th>2</th>
-                          <td>Hart Hagerty</td>
-                          <td>Desktop Support Technician</td>
-                          <td>Purple</td>
-                      </tr>
-                      {/* row 3 */}
-                      <tr>
-                          <th>3</th>
-                          <td>Brice Swyre</td>
-                          <td>Tax Accountant</td>
-                          <td>Red</td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
-  );
-}
+export const WorkoutsTable = ({ workouts }: { workouts: QueryResultRow[] }) => {
+    console.log(workouts);
+
+    return (
+        <div className="">
+            <h1 className="card-title">Recent Workouts</h1>
+            <div className="overflow-x-auto h-96">
+                <table className="table table-pin-rows table-pin-cols">
+                    {/* head */}
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Date</th>
+                            <th>Workout</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {workouts.map((row, index) => {
+                            const dateStr: String =
+                                row.workout_date instanceof Date
+                                    ? row.workout_date.toLocaleDateString()
+                                    : row.workout_date;
+
+                            return (
+                                <tr key={index + 1}>
+                                    <th>{index + 1}</th>
+                                    <td>{dateStr}</td>
+                                    <td>{row.target_muscles}</td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    );
+};
