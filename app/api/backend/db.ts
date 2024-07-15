@@ -3,8 +3,10 @@
 import { sql } from "@vercel/postgres";
 import { User, Workout } from "@/app/lib/definitions";
 import { v4 as uuidv4 } from 'uuid';
+import { unstable_noStore as noStore } from "next/cache";
 
 async function fetchUserByEmail(email: string) {
+    noStore();
     try {
         const db_users = await sql<User>`SELECT * FROM users WHERE email=${email}`;
         return db_users.rows;
@@ -16,6 +18,7 @@ async function fetchUserByEmail(email: string) {
 }
 
 export async function fetchUserById(id: string) {
+    noStore();
     try {
         const db_users = await sql<
             User
@@ -30,6 +33,7 @@ export async function fetchUserById(id: string) {
 }
 
 export async function fetchPassword(email: string) {
+    noStore();
     try {
         const password = await fetchUserByEmail(email);
         if (password.length == 0) {
@@ -73,6 +77,7 @@ export async function fetchUserName(email: string) {
 }
 
 export async function fetchNameById(id: string) {
+    noStore();
     try {
         const name = await fetchUserById(id);
         if (name.length == 0) {
@@ -87,8 +92,9 @@ export async function fetchNameById(id: string) {
 }
 
 export async function fetchWorkoutsById(id: string) {
+    noStore();
     try {
-        const workouts = await sql`SELECT * FROM workout_logs WL JOIN workouts W ON WL.workout_id = W.workout_id JOIN users U ON WL.user_id = U.user_id WHERE U.user_id = ${id};`;
+        const workouts = await sql`SELECT * FROM workout_logs WL JOIN workouts W ON WL.workout_id=W.workout_id JOIN users U ON WL.user_id=U.user_id WHERE U.user_id=${id};`;
         return workouts.rows;
     } catch (error) {
         console.log("fetch workouts by id error");
@@ -97,6 +103,7 @@ export async function fetchWorkoutsById(id: string) {
 }
 
 export async function fetchWorkoutsByDate(date: string) {
+    noStore();
     try {
         const workouts = await sql<Workout>`SELECT workout_id FROM workouts WHERE to_char(workout_date, 'YYYY-MM-DD')=${date};`;
         return workouts.rows;
@@ -106,6 +113,7 @@ export async function fetchWorkoutsByDate(date: string) {
 }
 
 export async function fetchUserWeeklyGoal(id: string) {
+    noStore();
     try {
         const goal = await sql`SELECT weekly_goal FROM users WHERE user_id=${id}`;
         return goal.rows;
