@@ -2,7 +2,7 @@ import { QueryResultRow } from '@vercel/postgres';
 import React from 'react'
 
 export const WorkoutsTable = ({ workouts }: { workouts: QueryResultRow[] }) => {
-    console.log(workouts);
+    //console.log(workouts);
 
     return (
         <div className="">
