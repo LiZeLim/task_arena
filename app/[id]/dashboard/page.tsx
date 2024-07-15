@@ -9,6 +9,8 @@ import { QueryResult, QueryResultRow } from "@vercel/postgres";
 import { Workout } from '@/app/lib/definitions';
 import { AddWorkout } from "@/app/components/addWorkout";
 
+import { sql } from "@vercel/postgres";
+
 async function getUser(id: string) {
     const user = await fetchUserById(id);
     return user[0];
@@ -95,6 +97,10 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
 
     const workoutGoalRatio = Math.round((currentWeekWorkoutsIds.length / user.weekly_goal) * 100);
     //console.log(workoutGoalRatio);
+
+    /* const testing =
+        await sql`SELECT * FROM workout_logs WHERE user_id = ${params.id};`;
+    console.log(testing); */
 
     return (
         <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
