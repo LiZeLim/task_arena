@@ -98,10 +98,6 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
     const workoutGoalRatio = Math.round((currentWeekWorkoutsIds.length / user.weekly_goal) * 100);
     //console.log(workoutGoalRatio);
 
-    /* const testing =
-        await sql`SELECT * FROM workout_logs WHERE user_id = ${params.id};`;
-    console.log(testing); */
-
     return (
         <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
             <div className="p-4 mx-auto w-full grow md:max-w-[800px] md:p-6 lg:max-w-screen-xl">
@@ -120,22 +116,30 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                             <div className="divider"></div>
                             <ActivityCalendar />
                             <div className="divider"></div>
-                            <UserStats params={stats} />
+                            <div className="ml-auto mr-auto">
+                                <UserStats params={stats} />
+                            </div>
                         </div>
                     </div>
                     <div className="divider lg:divider-horizontal"></div>
                     <div className="flex flex-col">
                         {/* User stats section */}
                         <div className="card card-compact bg-base-100">
-                            <div className="card-body">
+                            <div className="card-body flex-row ml-auto mr-auto">
                                 <div
                                     className="radial-progress"
-                                    style={{ "--value": workoutGoalRatio } as CSSProperties}
+                                    style={
+                                        {
+                                            "--value": workoutGoalRatio,
+                                        } as CSSProperties
+                                    }
                                     role="progressbar"
                                 >
                                     {workoutGoalRatio}%
                                 </div>
-                                <div>Monday: {currentWeekDates[0]}</div>
+                                <div className="card-title">
+                                    Monday start: {currentWeekDates[0]}
+                                </div>
                             </div>
                         </div>
                         <div className="divider"></div>
@@ -147,7 +151,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                     </div>
                     <div className="divider lg:divider-horizontal"></div>
                     <div>
-                        <AddWorkout params={params}/>
+                        <AddWorkout params={params} />
                     </div>
                 </div>
             </div>
