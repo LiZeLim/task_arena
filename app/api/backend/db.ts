@@ -141,3 +141,20 @@ export async function addWorkout(id: string, target_muscles: string) {
         return;
     }
 }
+
+export async function fetchCurrentYearMonthlyWorkoutsFreq(id: string) {
+    noStore();
+    try {
+        const monthlyFreq =
+            await sql`SELECT EXTRACT(MONTH FROM W.workout_date) AS workout_month, COUNT(*) AS total_workouts
+FROM workout_logs WL JOIN workouts W ON WL.workout_id = W.workout_id
+WHERE WL.user_id=${id} AND EXTRACT(YEAR FROM W.workout_date)=EXTRACT(YEAR FROM CURRENT_DATE)
+GROUP BY workout_month
+ORDER BY workout_month;`;
+
+        return monthlyFreq.rows;
+    } catch (error) {
+        console.log("Error fetching monthly freq")
+        return []
+    }
+}
