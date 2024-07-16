@@ -51,7 +51,7 @@ export const LineChart = ({ monthlyFreq }: { monthlyFreq: QueryResultRow[]}) => 
     };
 
     return (
-        <div className="max-h-96 min-w-96">
+        <div className="min-h-56 max-h-96 min-w-56 max-w-96">
             <div className="card-title">Monthly chart</div>
             <Line data={data} />
         </div>
