@@ -8,6 +8,8 @@ import { fetchUserById, fetchWorkoutsById, fetchWorkoutsByDate, fetchUserWeeklyG
 import { QueryResult, QueryResultRow } from "@vercel/postgres";
 import { Workout } from '@/app/lib/definitions';
 import { AddWorkout } from "@/app/components/addWorkout";
+import { LineChart } from "@/app/components/monthlyChart";
+import { fetchCurrentYearMonthlyWorkoutsFreq } from "@/app/api/backend/db";
 
 async function getUser(id: string) {
     const user = await fetchUserById(id);
@@ -100,8 +102,11 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
     const workoutGoalRatio = Math.round((currentWeekWorkoutsIds.length / user.weekly_goal) * 100);
     //console.log(workoutGoalRatio);
 
+    const monthFreq = await fetchCurrentYearMonthlyWorkoutsFreq(params.id);
+    //console.log(monthFreq);
+
     return (
-        <section className="bg-slate-300 flex min-h-screen min-w-[360px] flex-col">
+        <section className="bg-base-300 flex min-h-screen min-w-[360px] flex-col">
             <div className="p-4 mx-auto w-full grow md:max-w-[800px] md:p-6 lg:max-w-screen-xl">
                 <div className="flex w-full flex-col lg:flex-row">
                     <div>
@@ -123,7 +128,9 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                             </div>
                         </div>
                     </div>
+
                     <div className="divider lg:divider-horizontal"></div>
+
                     <div className="flex flex-col">
                         {/* User stats section */}
                         <div className="card card-compact bg-base-100">
@@ -147,11 +154,19 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                         <div className="divider"></div>
                         <div className="card card-compact bg-base-100">
                             <div className="card-body">
-                                <WorkoutsTable workouts={workouts}/>
+                                <WorkoutsTable workouts={workouts} />
+                            </div>
+                        </div>
+                        <div className="divider"></div>
+                        <div className="card card-compact bg-base-100">
+                            <div className="card-body">
+                                <LineChart monthlyFreq={monthFreq}/>
                             </div>
                         </div>
                     </div>
+
                     <div className="divider lg:divider-horizontal"></div>
+
                     <div>
                         <AddWorkout params={params} />
                     </div>
