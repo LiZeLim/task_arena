@@ -1,7 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import React, { CSSProperties, FormEvent } from "react";
-import { ActivityCalendar } from "@/app/components/activityCalendar";
 import { WorkoutsTable } from "@/app/components/workoutsTable";
 import { UserStats } from "@/app/components/userStats";
 import { fetchUserById, fetchWorkoutsById, fetchWorkoutsByDate, fetchUserWeeklyGoal } from "@/app/api/backend/db";
@@ -106,22 +105,32 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
     //console.log(monthFreq);
 
     return (
-        <section className="bg-base-300 flex min-h-screen min-w-[360px] flex-col">
-            <div className="p-4 mx-auto w-full grow md:max-w-[800px] md:p-6 lg:max-w-screen-xl">
-                <div className="flex w-full flex-col lg:flex-row">
+        <section className="bg-base-300 flex min-h-screen min-w-[560px] flex-col">
+            <div className="p-4 mx-auto grow md:max-w-[800px] md:p-6 lg:max-w-screen-xl">
+                <div className="flex w-full flex-col lg:flex-row mx-auto">
                     <div>
                         {/* User info section */}
                         <div className="card flex-col w-full px-4 py-6 bg-base-100">
                             <div>
-                                <h1 className="card-title">
-                                    {/* <Suspense fallback={<p>hi</p>}>
-                                        <Name />
-                                    </Suspense> */}
-                                    {name}
-                                </h1>
+                                <h1 className="card-title">{name}</h1>
                             </div>
                             <div className="divider"></div>
-                            <ActivityCalendar />
+                            <div className="card card-compact bg-base-100">
+                                <div className="card-body items-center justify-center">
+                                    <div>Monday: {currentWeekDates[0]}</div>
+                                    <div
+                                        className="radial-progress"
+                                        style={
+                                            {
+                                                "--value": workoutGoalRatio,
+                                            } as CSSProperties
+                                        }
+                                        role="progressbar"
+                                    >
+                                        {workoutGoalRatio}%
+                                    </div>
+                                </div>
+                            </div>
                             <div className="divider"></div>
                             <div className="ml-auto mr-auto">
                                 <UserStats params={stats} />
@@ -131,27 +140,8 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
 
                     <div className="divider lg:divider-horizontal"></div>
 
-                    <div className="flex flex-col">
+                    <div className="flex flex-col min-w-[380px]">
                         {/* User stats section */}
-                        <div className="card card-compact bg-base-100">
-                            <div className="card-body flex-row ml-auto mr-auto">
-                                <div
-                                    className="radial-progress"
-                                    style={
-                                        {
-                                            "--value": workoutGoalRatio,
-                                        } as CSSProperties
-                                    }
-                                    role="progressbar"
-                                >
-                                    {workoutGoalRatio}%
-                                </div>
-                                <div className="card-title">
-                                    Monday start: {currentWeekDates[0]}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="divider"></div>
                         <div className="card card-compact bg-base-100">
                             <div className="card-body">
                                 <WorkoutsTable workouts={workouts} />
@@ -160,7 +150,7 @@ export default async function Dashboard({ params }: { params: { id: string } }) 
                         <div className="divider"></div>
                         <div className="card card-compact bg-base-100">
                             <div className="card-body">
-                                <LineChart monthlyFreq={monthFreq}/>
+                                <LineChart monthlyFreq={monthFreq} />
                             </div>
                         </div>
                     </div>
