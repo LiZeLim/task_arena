@@ -5,20 +5,38 @@ import React from "react";
 import Link from "next/link";
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { checkEmail, addUser, fetchUserId } from "@/app/api/backend/db";
 
 const Page = () => {
     const router = useRouter();
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     async function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         const formData = new FormData(event.currentTarget);
-        const name = formData.get("name") as string;
-        const email = formData.get("email") as string;
-        const password = formData.get("password") as string;
-        const workoutGoal = formData.get("workoutGoal") as string;
+        const name: string = formData.get("name") as string;
+        const email: string = formData.get("email") as string;
+        const password: string = formData.get("password") as string;
+        const workoutGoal: string = formData.get("workoutGoal") as string;
 
         console.log(name, email, password, workoutGoal);
+
+        //TODO check if email is valid -> in the system already, workoutGoal shouldn't be < 1
+        const containsEmail: boolean = await checkEmail(email);
+        if (containsEmail) {
+            setErrorMessage("Please enter a different email");
+            return
+        }
+
+        const addedUser: boolean = await addUser(name, email, password, workoutGoal);
+        if (!addedUser) {
+            console.log("Please check uuid");
+            setErrorMessage("Error creating new account");
+        } else {
+            const id = await fetchUserId(email);
+            router.push(`/${id}/dashboard`);
+        }
     }
 
     return (
@@ -31,6 +49,7 @@ const Page = () => {
                     </div>
                     <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
                         <form className="card-body" onSubmit={handleSubmit}>
+                            <h1>{errorMessage}</h1>
                             <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Name</span>
@@ -78,6 +97,7 @@ const Page = () => {
                                     placeholder="workoutGoal"
                                     name="workoutGoal"
                                     className="input input-bordered"
+                                    min="1"
                                     required
                                 />
                             </div>
