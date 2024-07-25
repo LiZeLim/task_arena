@@ -158,3 +158,28 @@ ORDER BY workout_month;`;
         return []
     }
 }
+
+export async function checkEmail(email: string) {
+    noStore();
+    //console.log(email);
+    try {
+        const contains = await sql`SELECT * FROM users WHERE email=${email}`;
+        //console.log(contains);
+        return contains.rowCount > 0;
+    } catch (error) {
+        console.log("Error fetching user emails");
+        return false;
+    }
+}
+
+export async function addUser(name: string, email: string, password: string, workoutGoal: string) {
+    noStore();
+    try {
+        const user_id = uuidv4();
+        await sql`INSERT INTO users(user_id, name, email, password, weekly_goal) VALUES (${user_id}, ${name}, ${email}, ${password}, ${workoutGoal})`;
+        return true;
+    } catch (error) {
+        console.log("Error inserting new user");
+        return false;
+    }
+}
