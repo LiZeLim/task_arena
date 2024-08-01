@@ -1,5 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 
+import Link from "next/link";
 import React from "react";
 
 export const Hero = () => {
@@ -16,7 +17,9 @@ export const Hero = () => {
                             application. Suited for people who have a strict gym
                             schedule.
                         </p>
-                        <button className="btn btn-primary">Get Started</button>
+                        <button className="btn btn-primary">
+                            <Link href={"/login"}>Get Started</Link>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -42,7 +45,7 @@ export const Hero = () => {
                     Set new fitness goals and watch yourself achieve them.
                     TaskArena helps you stay on target.
                 </p>
-                <div className="test-2xl py-4">
+                <div className="test-2xl py-8">
                     <p>
                         This is a personal project of mine aimed at learning and
                         developing skills in full-stack application development.
