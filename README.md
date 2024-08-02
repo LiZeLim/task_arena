@@ -1,5 +1,7 @@
 # Task Arena
 
+Application Link: <https://task-arena.vercel.app/>  
+
 Task Arena is a simple gym tracking application. The application records 3 targeted muscles, and provides statistics on your profile.
 
 ## Features
